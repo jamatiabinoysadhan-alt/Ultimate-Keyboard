@@ -7,7 +7,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.ultimatekeyboard'
+        applicationId 'com.ultimatekeyboard.dev'
         minSdk 23
         targetSdk 35
         versionCode 1
