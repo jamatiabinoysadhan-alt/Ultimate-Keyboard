@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class UltimateKeyboardService extends InputMethodService {
+    private boolean shiftOn = false;
+    private boolean capsLock = false;
 
     private int dp(float value) {
         return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
@@ -52,6 +54,16 @@ public class UltimateKeyboardService extends InputMethodService {
         if (ic == null) return;
 
         switch (key) {
+            case "⇧":
+            case "Shift":
+                if (shiftOn) {
+                    capsLock = !capsLock;
+                    shiftOn = false;
+                } else {
+                    shiftOn = true;
+                }
+                setInputView(onCreateInputView());
+                return;
             case "⌫":
                 ic.deleteSurroundingText(1, 0);
                 break;
@@ -68,7 +80,13 @@ public class UltimateKeyboardService extends InputMethodService {
                 setInputView(onCreateInputView());
                 break;
             default:
-                ic.commitText(key, 1);
+                String output = key;
+                if (key.length() == 1 && Character.isLetter(key.charAt(0))
+                        && (shiftOn || capsLock)) {
+                    output = key.toUpperCase(java.util.Locale.ROOT);
+                    if (!capsLock) shiftOn = false;
+                }
+                ic.commitText(output, 1);
                 break;
         }
     }
